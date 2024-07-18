@@ -117,3 +117,8 @@ main {
   background: #444;
 }
 
+@media only screen and (max-width : 522px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+}

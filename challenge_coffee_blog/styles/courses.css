@@ -1,0 +1,64 @@
+:root {
+    --primary-color: #8b5e3c;
+    --background-color: #f9f9f9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: Arial, sans-serif;
+}
+
+main {
+    padding: 50px;
+    background: var(--background-color);
+}
+
+.courses {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.courses h2 {
+    font-size: 36px;
+    margin-bottom: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+thead th {
+    padding: 10px;
+}
+
+tbody tr {
+    background-color: white;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+tbody tr:nth-child(even) {
+    background-color: var(--background-color);
+}
+
+tbody td {
+    padding: 10px;
+    text-align: center;
+}
+
+tbody td img {
+    width: 100px;
+    height: auto;
+    border-radius: 5px;
+}

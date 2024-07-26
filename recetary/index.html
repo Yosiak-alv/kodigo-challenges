@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recetary</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/index.css">
+   
+</head>
+<body>
+    <main x-data="data()">
+        <div class="container">
+            <!-- hero section -->
+            <section class="row">
+                <div class="col-lg-12">
+                    <h1 class="text-center mt-2 mb-3">Omelette Recipe</h1>
+                    <div class="recipe-img img-fluid"></div>
+                </div>
+            </section>
+
+            <!-- cards section -->
+            <section class="row my-3">
+                <div class="col-12">
+                    <div class="row row-gap-3">
+                        <h2 class="mt-3 mb-3 fw-bold">Classic Omelette</h2>
+                        
+                        <template x-for="card in cards" :key="card.title">
+                            <div class="col-lg-4 col-md-4 col-xs-12">
+                                <div class="recipe-card">
+                                    <h4 x-text="card.title"></h4>
+                                    <p x-text="card.time"></p>  
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </section>
+
+            <!-- process section -->
+            <section class="row my-3">
+                <div class="col-lg-12">
+                    <h2 class="mt-4 mb-5 fw-bold">Ingredients</h2>
+                    
+                    <template x-for="ingredient in ingredients" :key="ingredient.title">
+                        <div class="mb-5">
+                            <h4 class="fw-normal" x-text="ingredient.title"></h4>
+                            <p class="mb-2 text-muted" x-text="ingredient.description"></p>
+                        </div>
+                    </template>
+                    
+                    <h2 class="mb-5 fw-bold">Instructions</h2>
+                    
+                    <template x-for="instruction in instructions" :key="instruction">
+                        <div class="mb-5">
+                            <p class="fs-5" x-text="instruction"></p>
+                        </div>
+                    </template>
+                    
+                    
+                    <h2 class="mb-5 fw-bold">Nutrition Facts</h2>
+                    <div class="mb-5">
+                        <p class="fs-5">
+                            Calories: <span x-text="nutritionFacts.calories"/>
+                        </p>
+                    </div>
+                    <div class="mb-5">
+                        <p class="fs-5">
+                            Carbohydrates: <span x-text="nutritionFacts.carbohydrates"/>
+                        </p>
+                    </div>
+                    <div class="mb-5">
+                        <p class="fs-5">
+                            Protein: <span x-text="nutritionFacts.protein"/>
+                        </p>
+                    </div>
+                    <div class="mb-5">
+                        <p class="fs-5">
+                            Fat: <span x-text="nutritionFacts.fat"/>
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <!-- usando alpinejs para comunicar scripts mas facil -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- load static data -->
+    <script>
+        function data() {
+            return {
+                cards: [
+                    { title: 'Prep', time: '10 mins' },
+                    { title: 'Cook', time: '5 mins' },
+                    { title: 'Total', time: '15 mins' }
+                ],
+                ingredients: [
+                    { title: '4 large eggs', description: 'room temperature' },
+                    { title: '1/4 cup whole milk' },
+                    { title: '1/4 teaspoon kosher salt' },
+                    { title: '2 tablespoons unsalted butter' }
+                ],
+                instructions: [
+                    'Beat the eggs and milk until light and frothy.',
+                    'Heat a nonstick skillet over medium heat. Add the butter.',
+                    'Pour in the eggs. Let them set for a few seconds.',
+                    'Use a spatula to push the cooked eggs from the edge of the skillet toward...',
+                    'When the eggs are mostly set but still soft, fold in half.',
+                    'Slide the omelette onto a plate.'
+                ],
+                nutritionFacts: {
+                    calories: '292kcal',
+                    carbohydrates: '1g',
+                    protein: '13g',
+                    fat: '26g'
+                }
+            };
+        }
+    </script>
+</body>
+</html>

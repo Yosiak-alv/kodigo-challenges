@@ -60,12 +60,7 @@ p {
     position: relative;
 }
 
-.hero img {
-    width: 60%;
-    margin: 40px  0 50px 0;
-}
-
-.hero .hero-btn {
+.hero a{
     margin: 10px;
     padding: 15px 80px;
     text-align: center;
@@ -77,14 +72,18 @@ p {
     display: inline-block;
     font-weight: 700;
     text-decoration: none; 
-    background-image: -webkit-gradient(linear, left top, right top, from(#02AAB0), color-stop(51%, #00CDAC), to(#02AAB0));    
     background-image: linear-gradient(to right, #02AAB0 0%, #00CDAC 51%, #02AAB0 100%);
 }
 
-.hero .hero-btn:hover {
+.hero a:hover{
     background-position: right center;
     color: #fff;
     text-decoration: none;
+}
+
+.hero img {
+    width: 60%;
+    margin: 40px;
 }
 
 /* FEATURES */
@@ -133,7 +132,133 @@ p {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    
 }
 
+/* SUSCRIBE */
+.suscribe {
+    background-color: #1c2431;
+    padding: 50px;
+    width: 75%;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
   
+.suscribe form input {
+    width: 70%;
+    height: 50px;
+    border-radius: 50px;
+    border: none;
+    padding-left: 30px;
+}
+
+.suscribe form button{
+    margin: 10px;
+    padding: 15px 30px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;
+    border-radius: 30px;
+    display: inline-block;
+    font-weight: 700;
+    text-decoration: none; 
+    background-image: linear-gradient(to right, #02AAB0 0%, #00CDAC 51%, #02AAB0 100%);
+}
+
+.suscribe button:hover{
+    background-position: right center;
+    color: #fff;
+    text-decoration: none;
+}
+  
+
+  /* FOOTER */
+footer {
+    background-color: #0b1523;
+    padding: 220px 0 70px 0;
+    margin-top: -150px;
+    position: relative;
+}
+  
+footer img {
+    margin-bottom: 20px;
+}
+  
+footer .location {
+    position: relative;
+    padding-left: 20px;
+}
+  
+footer .location::before {
+    content: '\f3c5';
+    padding-right: 10px;
+    font-family: 'Font Awesome\ 5 Free';
+    font-weight: 900;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 0;
+}
+  
+footer span {
+    font-size: 15px;
+    padding-left: 25px;
+    display: block;
+    margin-bottom: 20px;
+    position: relative;
+}
+  
+footer span.phone::before {
+    content: '\f095';
+    font-family: 'Font Awesome\ 5 Free';
+    padding-right: 10px;
+    font-weight: 900;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 0;
+}
+  
+footer span.email::before {
+    content: '\f0e0';
+    font-family: 'Font Awesome\ 5 Free';
+    padding-right: 10px;
+    font-weight: 900;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 0;
+}
+  
+footer ul {
+    list-style-type: none;
+}
+  
+footer ul li {
+    font-size: 14px;
+    line-height: 27px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+  
+footer .social-media li {
+    display: inline-block;
+}
+  
+footer .social-media li a {
+    color: #fff;
+    text-decoration: none;
+    border: 1.4px solid #fff;
+    padding: 6px 10px;
+    margin-right: 5px;
+    margin: 0 5px 10px 0;
+    border-radius: 50px;
+}
+  
+footer .social-media li a:hover {
+    color: #5ad7db;
+    border: 1.4px solid #5ad7db;
+}

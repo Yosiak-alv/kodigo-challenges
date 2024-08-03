@@ -11,4 +11,4 @@ Página desarrollada con:
 
 ## Imagenes de Resultado
 
-![alt text](https://github.com/[yosiak-alv]/[kodigo-challenges]/blob/[branch]/Fylo_dark%20_landing_page/result.png?raw=true)
+![alt text](https://github.com/yosiak-alv/kodigo-challenges/blob/main/Fylo_dark%20_landing_page/result.png?raw=true)

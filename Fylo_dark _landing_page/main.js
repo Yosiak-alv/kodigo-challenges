@@ -1,5 +1,5 @@
 const form = document.getElementById('form');
-const emailInput = document.getElementById('email-input');
+const emailInput = document.getElementById('email');
 const emailValidationMessage = document.getElementById('validation-message');
 
 

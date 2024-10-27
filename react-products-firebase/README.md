@@ -1,8 +1,26 @@
-# React + Vite
+# Getting started
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Installation
 
-Currently, two official plugins are available:
+Please check the official laravel installation guide for server requirements before you start. [Official Documentation](https://laravel.com/docs/5.4/installation#installation)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Clone the repository
+
+    git clone https://github.com/Yosiak-alv/kodigo-challenges.git
+
+Switch to the repo folder
+
+    cd react-products-firebase
+
+Install all the FrontEnd Dependencies with your package manager (ex: npm)
+
+    npm install
+
+Copy the example env file and make the required configuration changes in the .env file
+
+    cp .env.example .env
+
+Start the local development server
+    npm run dev
+
+You can now access the server at http://localhost:5173

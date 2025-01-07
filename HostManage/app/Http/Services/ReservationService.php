@@ -9,7 +9,7 @@ use Inertia\Response;
 
 class ReservationService
 {
-    public function create(ReservationRequest $request)
+    public function store(ReservationRequest $request)
     {
         $attr = $request->validated();
         $attr['user_id'] = auth()->id();
@@ -31,7 +31,7 @@ class ReservationService
             'type' => 'success',
         ]);
     }
-    public function delete(Reservation $reservation)
+    public function destroy(Reservation $reservation)
     {
         $reservation->delete();
         return redirect()->route('reservations.index')->with([

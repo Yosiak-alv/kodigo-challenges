@@ -32,19 +32,21 @@ export default function AuthenticatedLayout({ header, children }) {
                                     Dashboard
                                 </NavLink>
 
-                                <NavLink
-                                    href={route('reservations.index')}
-                                    active={route().current('reservations.index')}
-                                >
-                                    Reservations
-                                </NavLink>
-
-                                <NavLink
-                                    href={route('accommodations.index')}
-                                    active={route().current('accommodations.index')}
-                                >
-                                    Accommodations
-                                </NavLink>
+                                {user.role === 'ADMIN' ? (
+                                    <NavLink
+                                        href={route('accommodations.index')}
+                                        active={route().current('accommodations.index')}
+                                    >
+                                        Accommodations
+                                    </NavLink>
+                                ):(
+                                    <NavLink
+                                        href={route('reservations.index')}
+                                        active={route().current('reservations.index')}
+                                    >
+                                        Reservations
+                                    </NavLink>
+                                )}
                             </div>
                         </div>
 
@@ -150,18 +152,21 @@ export default function AuthenticatedLayout({ header, children }) {
                             Dashboard
                         </ResponsiveNavLink>
 
-                        <ResponsiveNavLink
-                            href={route('reservations.index')}
-                            active={route().current('reservations.index')}
-                        >
-                            Reservations
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('accommodations.index')}
-                            active={route().current('accommodations.index')}
-                        >
-                            Accommodations
-                        </ResponsiveNavLink>
+                        {user.role === 'ADMIN' ? (
+                            <ResponsiveNavLink
+                                href={route('accommodations.index')}
+                                active={route().current('accommodations.index')}
+                            >
+                                Accommodations
+                            </ResponsiveNavLink>
+                        ):(
+                            <ResponsiveNavLink
+                                href={route('reservations.index')}
+                                active={route().current('reservations.index')}
+                            >
+                                Reservations
+                            </ResponsiveNavLink>
+                        )}
                     </div>
 
                     <div className="border-t border-gray-200 pb-1 pt-4">

@@ -20,4 +20,13 @@ class Accommodation extends Model
     {
         return $this->hasMany(Reservation::class);
     }
+
+    public function scopeFilter($query , array $filters): void {
+        $query->when($filters['search'] ?? null, function($query, $search){
+            $query->where(fn($query) =>
+                $query->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%')
+            );
+        });
+    }
 }

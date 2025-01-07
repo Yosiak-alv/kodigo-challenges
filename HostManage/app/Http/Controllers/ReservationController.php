@@ -6,6 +6,7 @@ use App\Http\Requests\ReservationRequest;
 use App\Http\Services\ReservationService;
 use App\Models\Accommodation;
 use App\Models\Reservation;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,6 +22,7 @@ class ReservationController extends Controller
      */
     public function index(): Response
     {
+        Gate::authorize('viewAny', Reservation::class);
         return Inertia::render('Reservations/Index', [
             'reservations' => Reservation::select('*')
                 ->with(['accommodation'])
@@ -34,6 +36,7 @@ class ReservationController extends Controller
      */
     public function create(): Response
     {
+        Gate::authorize('viewAny', Reservation::class);
         return Inertia::render('Reservations/Create',[
             'accommodations' => Accommodation::all(),
         ]);
@@ -44,7 +47,8 @@ class ReservationController extends Controller
      */
     public function store(ReservationRequest $request)
     {
-        return $this->service->create($request);
+        Gate::authorize('create', Reservation::class);
+        return $this->service->store($request);
     }
 
     /**
@@ -52,6 +56,7 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
-        return $this->service->delete($reservation);
+        Gate::authorize('delete', $reservation);
+        return $this->service->destroy($reservation);
     }
 }

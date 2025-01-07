@@ -5,6 +5,10 @@
 
 Please check the official laravel installation guide for server requirements before you start. [Official Documentation](https://laravel.com/docs/5.4/installation#installation)
 
+ADMIN CREDENTIALS
+
+    email:administrator@example.com , password:password
+
 Clone the repository
 
     git clone https://github.com/Yosiak-alv/kodigo-challenges.git

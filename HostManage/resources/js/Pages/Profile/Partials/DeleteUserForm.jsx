@@ -4,10 +4,11 @@ import InputLabel from '@/Components/InputLabel';
 import Modal from '@/Components/Modal';
 import SecondaryButton from '@/Components/SecondaryButton';
 import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
+import {useForm, usePage} from '@inertiajs/react';
 import { useRef, useState } from 'react';
 
 export default function DeleteUserForm({ className = '' }) {
+    const user = usePage().props.auth.user;
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
     const passwordInput = useRef();
 
@@ -60,9 +61,13 @@ export default function DeleteUserForm({ className = '' }) {
                 </p>
             </header>
 
-            <DangerButton onClick={confirmUserDeletion}>
-                Delete Account
-            </DangerButton>
+            { user.role === 'USER' ? (
+                <DangerButton onClick={confirmUserDeletion}>
+                    Delete Account
+                </DangerButton>
+            ):(
+                <></>
+            )}
 
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">

@@ -1,0 +1,155 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "QueryBuilder API",
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/challenge1": {
+            "post": {
+                "tags": [
+                    "QueryBuilder"
+                ],
+                "summary": "Insert five new users",
+                "operationId": "d08995ded42439f6afeb9e9a9db3b57f",
+                "responses": {
+                    "200": {
+                        "description": "Five users inserted successfully"
+                    }
+                }
+            }
+        },
+        "/api/challenge2": {
+            "get": {
+                "tags": [
+                    "QueryBuilder"
+                ],
+                "summary": "Get orders for user 2",
+                "operationId": "edaf2da3e0e3036f9999d5f07e5ca79c",
+                "responses": {
+                    "200": {
+                        "description": "Orders for user 2"
+                    }
+                }
+            }
+        },
+        "/api/challenge3": {
+            "get": {
+                "tags": [
+                    "QueryBuilder"
+                ],
+                "summary": "Get orders with user details",
+                "operationId": "1f6f7f1bd07df61c8e30d18124919568",
+                "responses": {
+                    "200": {
+                        "description": "Orders with user details"
+                    }
+                }
+            }
+        },
+        "/api/challenge4": {
+            "get": {
+                "tags": [
+                    "QueryBuilder"
+                ],
+                "summary": "Get orders where total is on [100, 250]",
+                "operationId": "30edfd038940e98c1cf429f8ce7d8a4e",
+                "responses": {
+                    "200": {
+                        "description": "Orders where total is on [100, 250]"
+                    }
+                }
+            }
+        },
+        "/api/challenge5": {
+            "get": {
+                "tags": [
+                    "QueryBuilder"
+                ],
+                "summary": "Get users where name starts with 'R'",
+                "operationId": "1e3ef21e9ca2a11cd4f391b55293ff95",
+                "responses": {
+                    "200": {
+                        "description": "Users where name starts with 'R'"
+                    }
+                }
+            }
+        },
+        "/api/challenge6": {
+            "get": {
+                "tags": [
+                    "QueryBuilder"
+                ],
+                "summary": "Get total orders for user 5",
+                "operationId": "6cdde51062059e71104c215c42092090",
+                "responses": {
+                    "200": {
+                        "description": "Total orders for user 5"
+                    }
+                }
+            }
+        },
+        "/api/challenge7": {
+            "get": {
+                "tags": [
+                    "QueryBuilder"
+                ],
+                "summary": "Get orders with user details sorted by total in descending order",
+                "operationId": "86e011ae230c1b0b544f822f893d65f4",
+                "responses": {
+                    "200": {
+                        "description": "Orders with user details sorted by total in descending order"
+                    }
+                }
+            }
+        },
+        "/api/challenge8": {
+            "get": {
+                "tags": [
+                    "QueryBuilder"
+                ],
+                "summary": "Get sum of total of all orders",
+                "operationId": "cf7100b5f6278638f2e0f1250b12154c",
+                "responses": {
+                    "200": {
+                        "description": "Sum of total of all orders"
+                    }
+                }
+            }
+        },
+        "/api/challenge9": {
+            "get": {
+                "tags": [
+                    "QueryBuilder"
+                ],
+                "summary": "Get smallest total order with user details",
+                "operationId": "6f22c022ee46a8b605198b1bb8dac11f",
+                "responses": {
+                    "200": {
+                        "description": "Smallest total order with user details"
+                    }
+                }
+            }
+        },
+        "/api/challenge10": {
+            "get": {
+                "tags": [
+                    "QueryBuilder"
+                ],
+                "summary": "Get orders with user details grouped by user name",
+                "operationId": "2cd85fedeb0a6e466a5e9ba7639b2546",
+                "responses": {
+                    "200": {
+                        "description": "Orders with user details grouped by user name"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "QueryBuilder",
+            "description": "API for query builder challenges"
+        }
+    ]
+}

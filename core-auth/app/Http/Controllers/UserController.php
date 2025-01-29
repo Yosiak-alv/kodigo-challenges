@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\UserResponseDto;
+use App\Http\Resources\UserResponseResource;
+use App\Http\Services\UserService;
 use App\Models\User;
 use App\Traits\HttpResponseTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +18,52 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class UserController extends Controller
 {
+    public function __construct(private UserService $userService){}
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/users/dashboard",
+     *     summary="Get all users statistics",
+     *     description="Get all users statistics",
+     *     tags={"UserController"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *            response=200,
+     *            description="User statistics retrieved successfully",
+     *            @OA\JsonContent(
+     *                type="object",
+     *                @OA\Property(property="data", type="object"),
+     *                @OA\Property(property="status", type="integer", example=200),
+     *                @OA\Property(property="message", type="string", example="OK")
+     *            )
+     *       ),
+     *     @OA\Response(
+     *             response=401,
+     *             description="Unauthorized",
+     *             @OA\JsonContent(
+     *                 type="object",
+     *                 @OA\Property(property="data", type="object"),
+     *                 @OA\Property(property="status", type="integer", example=401),
+     *                 @OA\Property(property="message", type="string", example="UNAUTHORIZED")
+     *             )
+     *        ),
+     *       @OA\Response(
+     *              response=500,
+     *              description="Internal server error",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=500),
+     *                  @OA\Property(property="message", type="string", example="INTERNAL SERVER ERROR")
+     *              )
+     *       )
+     *  )
+     */
+    public function dashboard(): JsonResponse
+    {
+        return $this->sendResponse($this->userService->dashboard());
+    }
+
     /**
      * @OA\Get(
      *     path="/api/v1/users",
@@ -24,14 +72,40 @@ class UserController extends Controller
      *     tags={"UserController"},
      *     security={{"bearerAuth": {}}},
      *     @OA\Response(
-     *      response=200,
-     *      description="Successful operation",
-     *     )
+     *            response=200,
+     *            description="Users retrieved successfully",
+     *            @OA\JsonContent(
+     *                type="object",
+     *                @OA\Property(property="data", type="object"),
+     *                @OA\Property(property="status", type="integer", example=200),
+     *                @OA\Property(property="message", type="string", example="OK")
+     *            )
+     *       ),
+     *     @OA\Response(
+     *             response=401,
+     *             description="Unauthorized",
+     *             @OA\JsonContent(
+     *                 type="object",
+     *                 @OA\Property(property="data", type="object"),
+     *                 @OA\Property(property="status", type="integer", example=401),
+     *                 @OA\Property(property="message", type="string", example="UNAUTHORIZED")
+     *             )
+     *        ),
+     *       @OA\Response(
+     *              response=500,
+     *              description="Internal server error",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=500),
+     *                  @OA\Property(property="message", type="string", example="INTERNAL SERVER ERROR")
+     *              )
+     *       )
      *  )
      */
     public function index(): JsonResponse
     {
-        return $this->sendResponse(UserResponseDto::collection(User::all()), 'Users retrieved successfully.');
+        return $this->sendResponse(UserResponseResource::collection(User::all()));
     }
 
     /**
@@ -51,28 +125,51 @@ class UserController extends Controller
      *         ),
      *     ),
      *     @OA\Response(
-     *      response=201,
-     *      description="User created successfully",
-     *     )
+     *           response=201,
+     *           description="User created successfully",
+     *           @OA\JsonContent(
+     *               type="object",
+     *               @OA\Property(property="data", type="object"),
+     *               @OA\Property(property="status", type="integer", example=201),
+     *               @OA\Property(property="message", type="string", example="CREATED")
+     *           )
+     *      ),
+     *      @OA\Response(
+     *            response=400,
+     *            description="Bad request",
+     *            @OA\JsonContent(
+     *                type="object",
+     *                @OA\Property(property="data", type="object"),
+     *                @OA\Property(property="status", type="integer", example=400),
+     *                @OA\Property(property="message", type="string", example="BAD REQUEST")
+     *            )
+     *       ),
+     *     @OA\Response(
+     *              response=401,
+     *              description="Unauthorized",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=401),
+     *                  @OA\Property(property="message", type="string", example="UNAUTHORIZED")
+     *              )
+     *         ),
+     *       @OA\Response(
+     *             response=500,
+     *             description="Internal server error",
+     *             @OA\JsonContent(
+     *                 type="object",
+     *                 @OA\Property(property="data", type="object"),
+     *                 @OA\Property(property="status", type="integer", example=500),
+     *                 @OA\Property(property="message", type="string", example="INTERNAL SERVER ERROR")
+     *             )
+     *        )
      *  )
      */
-    public function store(Request $request): JsonResponse
+    public function store(UserRequest $request): JsonResponse
     {
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors(), Response::HTTP_BAD_REQUEST);
-        }
-
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        return $this->sendResponse(new UserResponseDto($user), 'User created successfully.', Response::HTTP_CREATED);
+        $user = $this->userService->create($request);
+        return $this->sendResponse(new UserResponseResource($user),  Response::HTTP_CREATED);
     }
 
     /**
@@ -92,20 +189,40 @@ class UserController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *      response=200,
-     *      description="Successful operation",
-     *     )
+     *             response=200,
+     *             description="User retrieved successfully",
+     *             @OA\JsonContent(
+     *                 type="object",
+     *                 @OA\Property(property="data", type="object"),
+     *                 @OA\Property(property="status", type="integer", example=200),
+     *                 @OA\Property(property="message", type="string", example="OK")
+     *             )
+     *        ),
+     *     @OA\Response(
+     *              response=401,
+     *              description="Unauthorized",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=401),
+     *                  @OA\Property(property="message", type="string", example="UNAUTHORIZED")
+     *              )
+     *         ),
+     *         @OA\Response(
+     *               response=500,
+     *               description="Internal server error",
+     *               @OA\JsonContent(
+     *                   type="object",
+     *                   @OA\Property(property="data", type="object"),
+     *                   @OA\Property(property="status", type="integer", example=500),
+     *                   @OA\Property(property="message", type="string", example="INTERNAL SERVER ERROR")
+     *               )
+     *          )
      *  )
      */
-    public function show($id)
+    public function show(User $user): JsonResponse
     {
-        $user = User::find($id);
-
-        if (is_null($user)) {
-            return $this->sendError('User not found.');
-        }
-
-        return $this->sendResponse(new UserResponseDto($user), 'User retrieved successfully.');
+        return $this->sendResponse(new UserResponseResource($this->userService->findById($user)));
     }
 
     /**
@@ -134,36 +251,52 @@ class UserController extends Controller
      *          ),
      *      ),
      *     @OA\Response(
-     *      response=200,
-     *      description="User updated successfully",
-     *     )
+     *            response=200,
+     *            description="User updated successfully",
+     *            @OA\JsonContent(
+     *                type="object",
+     *                @OA\Property(property="data", type="object"),
+     *                @OA\Property(property="status", type="integer", example=200),
+     *                @OA\Property(property="message", type="string", example="OK")
+     *            )
+     *       ),
+     *       @OA\Response(
+     *             response=400,
+     *             description="Bad request",
+     *             @OA\JsonContent(
+     *                 type="object",
+     *                 @OA\Property(property="data", type="object"),
+     *                 @OA\Property(property="status", type="integer", example=400),
+     *                 @OA\Property(property="message", type="string", example="BAD REQUEST")
+     *             )
+     *        ),
+     *     @OA\Response(
+     *              response=401,
+     *              description="Unauthorized",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=401),
+     *                  @OA\Property(property="message", type="string", example="UNAUTHORIZED")
+     *              )
+     *         ),
+     *        @OA\Response(
+     *              response=500,
+     *              description="Internal server error",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=500),
+     *                  @OA\Property(property="message", type="string", example="INTERNAL SERVER ERROR")
+     *              )
+     *         )
      *  )
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $input = $request->all();
-        $user = User::find($id);
+        $updatedUser = $this->userService->update($user, $request);
 
-        if (is_null($user)) {
-            return $this->sendError('User not found.');
-        }
-
-        $validator = Validator::make($input, [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors(), Response::HTTP_BAD_REQUEST);
-        }
-
-        $user->name = $input['name'];
-        $user->email = $input['email'];
-        $user->password = bcrypt($input['password']);
-        $user->save();
-
-        return $this->sendResponse(new UserResponseDto($user), 'User updated successfully.');
+        return $this->sendResponse(new UserResponseResource($updatedUser));
     }
 
     /**
@@ -183,24 +316,58 @@ class UserController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *      response=204,
-     *      description="User deleted successfully",
-     *     )
+     *             response=200,
+     *             description="User deleted successfully",
+     *             @OA\JsonContent(
+     *                 type="object",
+     *                 @OA\Property(property="data", type="object"),
+     *                 @OA\Property(property="status", type="integer", example=200),
+     *                 @OA\Property(property="message", type="string", example="OK")
+     *             )
+     *        ),
+     *     @OA\Response(
+     *              response=401,
+     *              description="Unauthorized",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=401),
+     *                  @OA\Property(property="message", type="string", example="UNAUTHORIZED")
+     *              )
+     *         ),
+     *        @OA\Response(
+     *              response=403,
+     *              description="Forbidden",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=403),
+     *                  @OA\Property(property="message", type="string", example="FORBIDDEN")
+     *              )
+     *         ),
+     *         @OA\Response(
+     *               response=500,
+     *               description="Internal server error",
+     *               @OA\JsonContent(
+     *                   type="object",
+     *                   @OA\Property(property="data", type="object"),
+     *                   @OA\Property(property="status", type="integer", example=500),
+     *                   @OA\Property(property="message", type="string", example="INTERNAL SERVER ERROR")
+     *               )
+     *          )
      *  )
      */
-    public function destroy($id)
+    public function destroy(User $user) : JsonResponse
     {
-        $user = User::find($id);
-
-        if (is_null($user)) {
-            return $this->sendError('User not found.');
-        }
-
         if (auth()->id() === $user->id) {
             return $this->sendError('You cannot delete yourself.', [], Response::HTTP_FORBIDDEN);
         }
 
-        $user->delete();
-        return $this->sendResponse(null, 'User deleted successfully.', Response::HTTP_OK);
+        $delete = $this->userService->delete($user);
+        if (!$delete) {
+            return $this->sendError('User could not be deleted.', [], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return $this->sendResponse(['message' => 'User deleted successfully'], Response::HTTP_OK);
     }
 }

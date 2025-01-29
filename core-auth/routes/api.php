@@ -8,13 +8,14 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1/')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->name('login');
 });
-
-Route::prefix('v1/')->middleware(['auth:sanctum','check-token-expiration'])->group(function () {
+//->middleware(['auth:sanctum','check-token-expiration'])
+Route::prefix('v1/')->middleware(['auth:sanctum'])->group(function () {
     Route::post('refresh-token', [AuthController::class, 'refreshToken']);
 
+    Route::get('/users/dashboard', [UserController::class, 'dashboard']);
     Route::get('users', [UserController::class, 'index']);
-    Route::get('users/{id}', [UserController::class, 'show']);
+    Route::get('users/{user}', [UserController::class, 'show']);
     Route::post('users', [UserController::class, 'store']);
-    Route::put('users/{id}', [UserController::class, 'update']);
-    Route::delete('users/{id}', [UserController::class, 'destroy']);
+    Route::put('users/{user}', [UserController::class, 'update']);
+    Route::delete('users/{user}', [UserController::class, 'destroy']);
 });

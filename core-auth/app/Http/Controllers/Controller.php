@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
+use Illuminate\Routing\Controller as BaseController;
 /**
  * @OA\Info(title="CORE AUTH API", version="0.1")
  *
@@ -21,31 +22,40 @@ use Illuminate\Http\Response;
  *      securityScheme="bearerAuth",
  *  )
  */
-abstract class Controller
+class Controller extends BaseController
 {
+    use AuthorizesRequests, ValidatesRequests;
+
     // success response method
-    public function sendResponse($data, $message, $code = 200): JsonResponse
+    public function sendResponse($data, $code = 200): JsonResponse
     {
         $response = [
-            'success' => true,
             'data'    => $data,
-            'message' => $message,
+            'status'  => $code,
+            'message' => strtoupper(Response::$statusTexts[$code]),
         ];
 
         return response()->json($response, $code);
     }
 
     // return error response
-    public function sendError($error, $errorMessages = [], $code = 404)
+    public function sendError($message, $errorMessages = [], $code = 500)
     {
-        $response = [
-            'success' => false,
-            'message' => $error,
+        $data = [
+            'status' => $code,
+            'message' => $message,
+            'timestamp' => now()->format('Y-m-d H:i:s'),
         ];
 
         if(!empty($errorMessages)){
-            $response['errors'] = $errorMessages;
+            $data['errors'] = $errorMessages;
         }
+
+        $response = [
+            'data' => $data,
+            'status' => $code,
+            'message' => strtoupper(Response::$statusTexts[$code]),
+        ];
 
         return response()->json($response, $code);
     }

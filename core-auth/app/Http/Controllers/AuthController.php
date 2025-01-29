@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AuthRequest;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 /**
@@ -24,15 +25,41 @@ class AuthController extends Controller
      *         ),
      *     ),
      *     @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *     )
+     *            response=200,
+     *            description="Login successful",
+     *            @OA\JsonContent(
+     *                type="object",
+     *                @OA\Property(property="data", type="object"),
+     *                @OA\Property(property="status", type="integer", example=200),
+     *                @OA\Property(property="message", type="string", example="OK")
+     *            )
+     *       ),
+     *       @OA\Response(
+     *             response=400,
+     *             description="Bad request",
+     *             @OA\JsonContent(
+     *                 type="object",
+     *                 @OA\Property(property="data", type="object"),
+     *                 @OA\Property(property="status", type="integer", example=400),
+     *                 @OA\Property(property="message", type="string", example="BAD REQUEST")
+     *             )
+     *        ),
+     *        @OA\Response(
+     *              response=500,
+     *              description="Internal server error",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=500),
+     *                  @OA\Property(property="message", type="string", example="INTERNAL SERVER ERROR")
+     *              )
+     *         )
      * )
      */
-    public function login(Request $request): JsonResponse
+    public function login(AuthRequest $request): JsonResponse
     {
         $atExpireTime = now()->addMinutes(5);
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validated();
 
 
         if (auth()->attempt($credentials)) {
@@ -42,12 +69,12 @@ class AuthController extends Controller
             return $this->sendResponse(
                 [
                     'token' => $token,
-                    'expires_at' => $atExpireTime
-                ], 'User login successfully'
+                    'expires_at' => $atExpireTime->format('Y-m-d H:i:s')
+                ]
             );
         }
 
-        return $this->sendError('Unauthorised', [], 401);
+        return $this->sendError('email or password doesnt match, please check.', [], 401);
     }
 
     /**
@@ -58,9 +85,35 @@ class AuthController extends Controller
      *     tags={"AuthController"},
      *     security={{"bearerAuth": {}}},
      *     @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *     )
+     *             response=200,
+     *             description="Login successful",
+     *             @OA\JsonContent(
+     *                 type="object",
+     *                 @OA\Property(property="data", type="object"),
+     *                 @OA\Property(property="status", type="integer", example=200),
+     *                 @OA\Property(property="message", type="string", example="OK")
+     *             )
+     *        ),
+     *      @OA\Response(
+     *               response=401,
+     *               description="Unauthorized",
+     *               @OA\JsonContent(
+     *                   type="object",
+     *                   @OA\Property(property="data", type="object"),
+     *                   @OA\Property(property="status", type="integer", example=401),
+     *                   @OA\Property(property="message", type="string", example="UNAUTHORIZED")
+     *               )
+     *          ),
+     *        @OA\Response(
+     *              response=500,
+     *              description="Internal server error",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=500),
+     *                  @OA\Property(property="message", type="string", example="INTERNAL SERVER ERROR")
+     *              )
+     *         )
      * )
      */
     public function refreshToken(Request $request): JsonResponse
@@ -75,8 +128,8 @@ class AuthController extends Controller
         return $this->sendResponse(
             [
                 'token' => $newToken,
-                'expires_at' => $atExpireTime
-            ], 'Token refreshed successfully'
+                'expires_at' => $atExpireTime->format('Y-m-d H:i:s')
+            ]
         );
     }
 }

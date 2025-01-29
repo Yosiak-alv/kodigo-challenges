@@ -6,11 +6,13 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::prefix('v1/')->group(function () {
-    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('auth/login', [AuthController::class, 'login'])->name('login');
 });
 //->middleware(['auth:sanctum','check-token-expiration'])
 Route::prefix('v1/')->middleware(['auth:sanctum'])->group(function () {
-    Route::post('refresh-token', [AuthController::class, 'refreshToken']);
+    Route::post('auth/refresh-token', [AuthController::class, 'refreshToken']);
+    Route::post('auth/logout', [AuthController::class, 'logout']);
+    Route::get('auth/me', [AuthController::class, 'getCurrentUser']);
 
     Route::get('/users/dashboard', [UserController::class, 'dashboard']);
     Route::get('users', [UserController::class, 'index']);

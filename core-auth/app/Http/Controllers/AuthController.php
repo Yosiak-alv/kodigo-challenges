@@ -2,17 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AuthRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Resources\TokensResponseResource;
+use App\Http\Resources\UserResponseResource;
+use App\Http\Services\Auth\AuthService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * @OA\Tag(name="AuthController", description="API Endpoints of Auth Controller")
  */
 class AuthController extends Controller
 {
+    public function __construct(private readonly AuthService $authService){}
     /**
      * @OA\Post(
-     *     path="/api/v1/login",
+     *     path="/api/v1/auth/login",
      *     summary="Login",
      *     description="Login",
      *     tags={"AuthController"},
@@ -56,37 +62,27 @@ class AuthController extends Controller
      *         )
      * )
      */
-    public function login(AuthRequest $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $atExpireTime = now()->addMinutes(5);
-        $credentials = $request->validated();
+        $result = $this->authService->login($request);
 
-
-        if (auth()->attempt($credentials)) {
-            $user = auth()->user();
-            $token = $user->createToken('authToken',[], $atExpireTime)->plainTextToken;
-
-            return $this->sendResponse(
-                [
-                    'token' => $token,
-                    'expires_at' => $atExpireTime->format('Y-m-d H:i:s')
-                ]
-            );
+        if (isset($result['token'])) {
+            return $this->sendResponse($result);
         }
 
-        return $this->sendError('email or password doesnt match, please check.', [], 401);
+        return $this->sendResponse($result,Response::HTTP_UNAUTHORIZED);
     }
 
     /**
      * @OA\Post(
-     *     path="/api/v1/refresh-token",
+     *     path="/api/v1/auth/refresh-token",
      *     summary="Refresh Token",
      *     description="Refresh Token",
      *     tags={"AuthController"},
      *     security={{"bearerAuth": {}}},
      *     @OA\Response(
      *             response=200,
-     *             description="Login successful",
+     *             description="Token refreshed successfully",
      *             @OA\JsonContent(
      *                 type="object",
      *                 @OA\Property(property="data", type="object"),
@@ -118,18 +114,95 @@ class AuthController extends Controller
      */
     public function refreshToken(Request $request): JsonResponse
     {
-        $atExpireTime = now()->addMinutes(5);
-        $user = $request->user();
+        return $this->sendResponse($this->authService->refreshToken());
+    }
+    /**
+     * @OA\Post(
+     *     path="/api/v1/auth/logout",
+     *     summary="Logout",
+     *     description="Logout",
+     *     tags={"AuthController"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *             response=200,
+     *             description="Logout successful",
+     *             @OA\JsonContent(
+     *                 type="object",
+     *                 @OA\Property(property="data", type="object"),
+     *                 @OA\Property(property="status", type="integer", example=200),
+     *                 @OA\Property(property="message", type="string", example="OK")
+     *             )
+     *        ),
+     *      @OA\Response(
+     *               response=401,
+     *               description="Unauthorized",
+     *               @OA\JsonContent(
+     *                   type="object",
+     *                   @OA\Property(property="data", type="object"),
+     *                   @OA\Property(property="status", type="integer", example=401),
+     *                   @OA\Property(property="message", type="string", example="UNAUTHORIZED")
+     *               )
+     *          ),
+     *        @OA\Response(
+     *              response=500,
+     *              description="Internal server error",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=500),
+     *                  @OA\Property(property="message", type="string", example="INTERNAL SERVER ERROR")
+     *              )
+     *         )
+     * )
+     */
+    public function logout(): JsonResponse
+    {
+        $this->authService->logout();
 
-        $user->currentAccessToken()->delete();
+        return $this->sendResponse(['message' => 'Logout successfully']);
+    }
 
-        $newToken = $user->createToken('authToken', [], $atExpireTime)->plainTextToken;
-
-        return $this->sendResponse(
-            [
-                'token' => $newToken,
-                'expires_at' => $atExpireTime->format('Y-m-d H:i:s')
-            ]
-        );
+    /**
+     * @OA\Get(
+     *     path="/api/v1/auth/me",
+     *     summary="Get current authenticated user",
+     *     description="Get current authenticated user",
+     *     tags={"AuthController"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\Response(
+     *             response=200,
+     *             description="Get current authenticated user",
+     *             @OA\JsonContent(
+     *                 type="object",
+     *                 @OA\Property(property="data", type="object"),
+     *                 @OA\Property(property="status", type="integer", example=200),
+     *                 @OA\Property(property="message", type="string", example="OK")
+     *             )
+     *        ),
+     *      @OA\Response(
+     *               response=401,
+     *               description="Unauthorized",
+     *               @OA\JsonContent(
+     *                   type="object",
+     *                   @OA\Property(property="data", type="object"),
+     *                   @OA\Property(property="status", type="integer", example=401),
+     *                   @OA\Property(property="message", type="string", example="UNAUTHORIZED")
+     *               )
+     *          ),
+     *        @OA\Response(
+     *              response=500,
+     *              description="Internal server error",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=500),
+     *                  @OA\Property(property="message", type="string", example="INTERNAL SERVER ERROR")
+     *              )
+     *         )
+     * )
+     */
+    public function getCurrentUser(Request $request): JsonResponse
+    {
+        return $this->sendResponse($this->authService->me());
     }
 }

@@ -8,7 +8,6 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
 
-$genericExceptionHandler = new GenericExceptionHandler();
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -22,8 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'check-token-expiration' => CheckTokenExpiration::class
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions) use ($genericExceptionHandler) {
-        $exceptions->renderable(function (Throwable $e, Request $request) use ($genericExceptionHandler)  {
+    ->withExceptions(function (Exceptions $exceptions)  {
+        $exceptions->renderable(function (Throwable $e, Request $request) {
+            $genericExceptionHandler = new GenericExceptionHandler();
             return $genericExceptionHandler->handleException($e, $request);
         });
     })->create();

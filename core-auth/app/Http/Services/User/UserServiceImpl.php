@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Http\Services\User;
 
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResponseResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+
 class UserServiceImpl implements UserService
 {
     public function dashboard(): array

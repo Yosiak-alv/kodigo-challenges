@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResponseResource;
-use App\Http\Services\UserService;
+use App\Http\Services\User\UserService;
 use App\Models\User;
-use App\Traits\HttpResponseTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class UserController extends Controller
 {
-    public function __construct(private UserService $userService){}
+    public function __construct(private readonly UserService $userService){}
 
     /**
      * @OA\Get(

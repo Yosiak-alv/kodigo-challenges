@@ -13,7 +13,7 @@ const TokenRefreshModal = () => {
             if (!modalRef.current) {
                 triggerModal();
             }
-        }, 5 * 60 * 1000); // 5 minutes
+        }, 60 * 1000);
 
         return () => clearInterval(interval);
     }, []);

@@ -9,6 +9,7 @@ import Create from "./pages/user/Create.jsx";
 import Edit from "./pages/user/Edit.jsx";
 import Profile from "./pages/auth/Profile.jsx";
 import TokenRefreshModal from "./components/TokenRefreshModal.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 // Function to check if the user is authenticated
 const isAuthenticated = () => !!localStorage.getItem("authToken");
@@ -41,6 +42,10 @@ function App() {
                   <Route path="/users/:id" element={<ProtectedRoute><Show/></ProtectedRoute>} />
                   <Route path="/users/create" element={<ProtectedRoute><Create/></ProtectedRoute>} />
                   <Route path="/users/:id/edit" element={<ProtectedRoute><Edit/></ProtectedRoute>} />
+
+
+                  {/* Not Found */}
+                  <Route path="*" element={<NotFound/>} />
               </Routes>
           </BrowserRouter>
       )

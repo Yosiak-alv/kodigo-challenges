@@ -13,6 +13,7 @@ Route::prefix('v1/')->middleware(['auth:sanctum'])->group(function () {
     Route::post('auth/refresh-token', [AuthController::class, 'refreshToken']);
     Route::post('auth/logout', [AuthController::class, 'logout']);
     Route::get('auth/me', [AuthController::class, 'getCurrentUser']);
+    Route::patch('auth/update-password', [AuthController::class, 'updatePassword']);
 
     Route::get('/users/dashboard', [UserController::class, 'dashboard']);
     Route::get('users', [UserController::class, 'index']);

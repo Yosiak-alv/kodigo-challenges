@@ -20,8 +20,8 @@ class TokensResponseResource extends JsonResource
            //'tokenable_id' => $this->tokenable_id,
            'name' => $this->name,
            //'abilities' => $this->abilities,
-           'last_used_at' => $this->last_used_at->format('Y-m-d H:i:s'),
-           'expires_at' => $this->expires_at->format('Y-m-d H:i:s'),
+           'last_used_at' => $this->last_used_at?->format('Y-m-d H:i:s') ?? null,
+           'expires_at' => $this->expires_at?->format('Y-m-d H:i:s') ?? null,
            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
        ];

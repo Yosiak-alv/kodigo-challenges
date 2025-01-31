@@ -1,0 +1,26 @@
+services:
+    core-auth:
+        container_name: core-auth
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8000:8000"
+        env_file:
+            - .env
+        depends_on:
+            - db
+
+    db:
+        container_name: db
+        image: mysql:5.7
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: core_auth
+
+        volumes:
+            - db-data:/var/lib/mysql
+volumes:
+    db-data: {}

@@ -5,12 +5,14 @@ namespace App\Http\Services\Auth;
 use App\Http\Requests\LoginRequest;
 use App\Http\Resources\TokensResponseResource;
 use App\Http\Resources\UserResponseResource;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Password;
 
 class AuthServiceImpl implements AuthService
 {
     public function login(LoginRequest $request): array
     {
-        $atExpireTime = now()->addMinutes(5);
+        $atExpireTime = now()->addMinutes(60);
         $credentials = $request->validated();
 
         if (auth()->attempt($credentials)) {
@@ -41,9 +43,25 @@ class AuthServiceImpl implements AuthService
         ];
     }
 
+    public function updatePassword(Request $request): array
+    {
+        $request->validate([
+            'currentPassword' => ['required', 'current_password'],
+            'password' => ['required', Password::min(8), 'confirmed'],
+        ]);
+
+        $user = request()->user();
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return [
+            'message' => 'Password updated successfully.'
+        ];
+    }
+
     public function refreshToken(): array
     {
-        $atExpireTime = now()->addMinutes(5);
+        $atExpireTime = now()->addMinutes(60);
         $user = request()->user();
 
         $user->currentAccessToken()->delete();

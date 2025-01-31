@@ -96,12 +96,10 @@ class GenericExceptionHandler
             'data' => [
                 'message' => 'An error occurred.',
                 'errors' => [
-                    [
                         'type' => class_basename($e),
                         'message' => $e->getMessage(),
                         'source' => 'Line: ' . $e->getLine() . ' in ' . $e->getFile(),
                         'timestamp' => now()->format('Y-m-d H:i:s'),
-                    ],
                 ],
             ],
             'status' => ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,

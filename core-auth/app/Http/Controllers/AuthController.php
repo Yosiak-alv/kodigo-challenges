@@ -205,4 +205,57 @@ class AuthController extends Controller
     {
         return $this->sendResponse($this->authService->me());
     }
+
+    /**
+     * @OA\Patch(
+     *     path="/api/v1/auth/update-password",
+     *     summary="Update Password",
+     *     description="Update Password",
+     *     tags={"AuthController"},
+     *     security={{"bearerAuth": {}}},
+     *     @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *               type="object",
+     *               @OA\Property(property="currentPassword",type="string",description="Current Password", example="password"),
+     *               @OA\Property(property="password",type="string",description="User password", example="password"),
+     *               @OA\Property(property="password_confirmation",type="string",description="Confirm the new Password", example="password"),
+     *          ),
+     *      ),
+     *     @OA\Response(
+     *             response=200,
+     *             description="Logout successful",
+     *             @OA\JsonContent(
+     *                 type="object",
+     *                 @OA\Property(property="data", type="object"),
+     *                 @OA\Property(property="status", type="integer", example=200),
+     *                 @OA\Property(property="message", type="string", example="OK")
+     *             )
+     *        ),
+     *      @OA\Response(
+     *               response=401,
+     *               description="Unauthorized",
+     *               @OA\JsonContent(
+     *                   type="object",
+     *                   @OA\Property(property="data", type="object"),
+     *                   @OA\Property(property="status", type="integer", example=401),
+     *                   @OA\Property(property="message", type="string", example="UNAUTHORIZED")
+     *               )
+     *          ),
+     *        @OA\Response(
+     *              response=500,
+     *              description="Internal server error",
+     *              @OA\JsonContent(
+     *                  type="object",
+     *                  @OA\Property(property="data", type="object"),
+     *                  @OA\Property(property="status", type="integer", example=500),
+     *                  @OA\Property(property="message", type="string", example="INTERNAL SERVER ERROR")
+     *              )
+     *         )
+     * )
+     */
+    public function updatePassword(Request $request): JsonResponse
+    {
+        return $this->sendResponse($this->authService->updatePassword($request));
+    }
 }

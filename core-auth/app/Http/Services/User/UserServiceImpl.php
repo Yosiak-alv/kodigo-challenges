@@ -59,12 +59,10 @@ class UserServiceImpl implements UserService
         $request->validate([
             'name' => 'required|string',
             'email' => ['required', 'email', 'unique:users,email,' . $user->id],
-            'password' => 'required|string',
         ]);
 
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = bcrypt($request->password);
         $user->save();
 
         return $user;
